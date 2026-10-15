@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VideoIA Studio — Créateur vidéo IA</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18233b;--line:#293653;--text:#f4f7ff;--muted:#9eacc9;--blue:#69a7ff;--green:#63e6be;--purple:#b69cff;--danger:#ff8b9a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#172849 0%,transparent 45%),var(--bg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:100vh}
+.sidebar{border-right:1px solid var(--line);padding:24px 16px;background:#0b1222d9}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 28px;font-weight:800;font-size:19px;letter-spacing:-.5px}
+.logo{display:grid;place-items:center;width:35px;height:35px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--purple));color:#081022;font-weight:900}
+.navlabel{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#7181a3;padding:8px 12px}
+.nav button{width:100%;border:0;background:transparent;color:#b7c3dd;text-align:left;padding:12px;border-radius:10px;margin:2px 0}
+.nav button.active,.nav button:hover{background:#1a2945;color:#fff}
+.side-note{margin:32px 6px 0;padding:14px;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:12px;line-height:1.6}
+main{padding:28px clamp(18px,4vw,52px);max-width:1450px;width:100%;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}
+.eyebrow{font-size:12px;color:var(--green);text-transform:uppercase;letter-spacing:1.7px;font-weight:700}
+h1{font-size:clamp(26px,4vw,38px);letter-spacing:-1.3px;margin:8px 0 8px}
+.subtitle{color:var(--muted);max-width:720px;line-height:1.6;margin:0}
+.pill{border:1px solid #355079;background:#14243f;color:#bcd5ff;border-radius:99px;padding:8px 12px;font-size:12px;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:26px 0}
+.stat,.panel{background:linear-gradient(145deg,#141e33,#10182a);border:1px solid var(--line);border-radius:17px}
+.stat{padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:8px;letter-spacing:-.5px}
+.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:18px;align-items:start}
+.panel{padding:22px}.panel h2{font-size:17px;margin:0 0 7px}.panel .desc{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 22px}
+label{display:block;font-size:13px;font-weight:650;margin:16px 0 8px;color:#dce5fa}
+textarea,input,select{width:100%;border:1px solid #31405f;border-radius:10px;background:#0c1425;color:var(--text);padding:12px;outline:none}
+textarea:focus,input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #69a7ff1f}
+textarea{min-height:112px;resize:vertical;line-height:1.5}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.networks{display:flex;flex-wrap:wrap;gap:9px}
+.network{display:flex;align-items:center;gap:8px;border:1px solid #354360;border-radius:11px;padding:10px 12px;background:#0d1628;color:#dbe5fa;font-size:13px}
+.network input{width:auto;accent-color:var(--blue)}
+.btn{border:0;border-radius:11px;padding:12px 16px;font-weight:750}
+.primary{background:linear-gradient(100deg,#6aa9ff,#a18cff);color:#071022}
+.secondary{background:#1a2945;color:#dce8ff;border:1px solid #334666}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.notice{font-size:12px;color:var(--muted);line-height:1.6;margin-top:14px}
+.preview{border:1px dashed #405273;border-radius:15px;background:linear-gradient(145deg,#101a2d,#0b1323);min-height:205px;display:grid;place-items:center;text-align:center;padding:24px}
+.play{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#26395b;color:#bcd5ff;margin:0 auto 12px;font-size:20px}
+.preview p{margin:6px 0;color:var(--muted);font-size:13px}
+.status-list{margin-top:22px;display:grid;gap:10px}
+.status{display:flex;gap:12px;align-items:flex-start;padding:12px;background:#0e1729;border:1px solid #273651;border-radius:12px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green);margin-top:5px;flex:none}
+.status strong{display:block;font-size:13px}.status span{font-size:12px;color:var(--muted);line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chip{font-size:11px;border:1px solid #334666;border-radius:99px;padding:5px 8px;color:#bfd2f4}
+.output{display:none;margin-top:18px;padding:16px;border-radius:12px;border:1px solid #345b64;background:#102629}
+.output h3{margin:0 0 10px;font-size:15px}.output p{white-space:pre-wrap;line-height:1.6;color:#c8f4e7;font-size:13px}
+.footer{margin:22px 0 0;color:#7181a3;font-size:11px;line-height:1.6}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line);padding:12px 16px}.brand{padding-bottom:8px}.navlabel,.side-note{display:none}.nav{display:flex;gap:6px;overflow:auto}.nav button{white-space:nowrap;width:auto;padding:9px 11px}.layout{grid-template-columns:1fr}main{padding-top:22px}}
+@media(max-width:540px){.stats{grid-template-columns:1fr}.stat{padding:14px}.fields{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.panel{padding:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="logo">V</div><span>VideoIA <span style="color:#8dbbff">Studio</span></span></div>
+  <div class="navlabel">Espace de travail</div>
+  <nav class="nav">
+    <button class="active" data-view="creator">✦ Créateur vidéo</button>
+    <button data-view="queue">◷ File de création</button>
+    <button data-view="publish">↗ Publications</button>
+    <button data-view="settings">⚙ Connexions</button>
+  </nav>
+  <div class="side-note"><strong style="color:#e6edff">Prototype de départ</strong><br>Cette interface teste le parcours utilisateur. La génération réelle et la publication seront activées après la configuration des accès sécurisés.</div>
+</aside>
+<main>
+  <div class="topbar">
+    <div><div class="eyebrow">Studio de création intelligent</div><h1>Donne vie à tes idées.</h1><p class="subtitle">Prépare une vidéo, organise les scènes et prépare sa diffusion sur tes réseaux depuis un seul espace.</p></div>
+    <div class="pill">● Version prototype</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><small>Projets créés dans cette session</small><strong id="projectCount">0</strong></div>
+    <div class="stat"><small>Réseaux sélectionnés</small><strong id="networkCount">3</strong></div>
+    <div class="stat"><small>État du moteur IA</small><strong style="font-size:18px;color:#ffd18a">À connecter</strong></div>
+  </div>
+  <div class="layout">
+    <section class="panel">
+      <h2>Créer une nouvelle vidéo</h2>
+      <p class="desc">Décris ce que tu veux produire. Tu pourras ensuite affiner le script et préparer la publication.</p>
+      <form id="videoForm">
+        <label for="idea">Ton idée ou ton sujet</label>
+        <textarea id="idea" required placeholder="Ex. : Une histoire africaine inspirante sur un enfant qui résout un problème dans son village…"></textarea>
+        <div class="fields">
+          <div><label for="format">Format vidéo</label><select id="format"><option value="9:16">Vertical — Shorts / Reels / TikTok</option><option value="16:9">Horizontal — YouTube</option><option value="1:1">Carré — réseaux sociaux</option></select></div>
+          <div><label for="duration">Durée souhaitée</label><select id="duration"><option>15 secondes</option><option selected>30 secondes</option><option>60 secondes</option><option>90 secondes</option><option>3 minutes</option></select></div>
+          <div><label for="style">Style visuel</label><select id="style"><option>Animation 3D familiale</option><option>Cinématique réaliste</option><option>Documentaire</option><option>Éducatif et illustré</option><option>Publicité produit</option></select></div>
+          <div><label for="voice">Voix off</label><select id="voice"><option>Français — chaleureux</option><option>Français — énergique</option><option>Sans voix off</option><option>À définir</option></select></div>
+        </div>
+        <label>Où veux-tu publier ?</label>
+        <div class="networks">
+          <label class="network"><input type="checkbox" name="network" value="YouTube" checked> ▶ YouTube</label>
+          <label class="network"><input type="checkbox" name="network" value="Facebook" checked> f Facebook</label>
+          <label class="network"><input type="checkbox" name="network" value="TikTok" checked> ♪ TikTok</label>
+        </div>
+        <label for="publishMode">Mode de diffusion</label>
+        <select id="publishMode"><option value="review">Me demander de valider avant publication</option><option value="schedule">Préparer une programmation</option><option value="manual">Créer sans programmer</option></select>
+        <div class="btnrow"><button class="btn primary" type="submit">✦ Préparer mon projet</button><button class="btn secondary" type="button" id="sampleBtn">Charger un exemple</button></div>
+        <p class="notice">Dans ce prototype, le bouton prépare un aperçu de travail local. Il ne génère pas encore de fichier vidéo et ne publie rien sur tes comptes.</p>
+      </form>
+      <div class="output" id="output"><h3>Ton brief est prêt</h3><p id="outputText"></p><div class="chips" id="outputChips"></div></div>
+    </section>
+    <section class="panel">
+      <h2>Aperçu du projet</h2>
+      <p class="desc">L'espace où apparaîtra le résultat généré, avec les étapes de production.</p>
+      <div class="preview" id="preview">
+        <div><div class="play">▶</div><strong>Aucune vidéo pour le moment</strong><p>Ton aperçu apparaîtra après la préparation du projet.</p></div>
+      </div>
+      <div class="status-list">
+        <div class="status"><div class="dot"></div><div><strong>1. Brief créatif</strong><span>Définir le sujet, le style, la durée et les réseaux.</span></div></div>
+        <div class="status"><div class="dot" style="background:#8d9fbe"></div><div><strong>2. Script et scènes</strong><span>À relier à un service de génération de texte.</span></div></div>
+        <div class="status"><div class="dot" style="background:#8d9fbe"></div><div><strong>3. Génération vidéo et voix</strong><span>À relier au moteur vidéo et à la synthèse vocale.</span></div></div>
+        <div class="status"><div class="dot" style="background:#8d9fbe"></div><div><strong>4. Validation et publication</strong><span>À relier aux comptes sociaux autorisés.</span></div></div>
+      </div>
+      <div class="footer">Sécurité : les clés API devront rester côté serveur dans des variables d'environnement, jamais dans le navigateur ni dans le dépôt public.</div>
+    </section>
+  </div>
+</main>
+</div>
+<script>
+const form=document.getElementById('videoForm');
+const networkInputs=[...document.querySelectorAll('input[name="network"]')];
+const networkCount=document.getElementById('networkCount');
+const projectCount=document.getElementById('projectCount');
+let projects=0;
+function updateNetworks(){networkCount.textContent=networkInputs.filter(x=>x.checked).length}
+networkInputs.forEach(x=>x.addEventListener('change',updateNetworks));
+document.getElementById('sampleBtn').addEventListener('click',()=>{
+ document.getElementById('idea').value='Une histoire africaine inspirante : une jeune inventrice aide son village grâce à une idée ingénieuse.';
+ document.getElementById('format').value='9:16';
+ document.getElementById('duration').value='30 secondes';
+ document.getElementById('style').value='Animation 3D familiale';
+ document.getElementById('voice').value='Français — chaleureux';
+});
+form.addEventListener('submit',e=>{
+ e.preventDefault();
+ const idea=document.getElementById('idea').value.trim();
+ const format=document.getElementById('format').value;
+ const duration=document.getElementById('duration').value;
+ const style=document.getElementById('style').value;
+ const voice=document.getElementById('voice').value;
+ const networks=networkInputs.filter(x=>x.checked).map(x=>x.value);
+ const mode=document.getElementById('publishMode').selectedOptions[0].text;
+ if(!networks.length){alert('Choisis au moins un réseau de publication.');return}
+ projects++;projectCount.textContent=projects;
+ document.getElementById('outputText').textContent='SUJET : '+idea+'\nFORMAT : '+format+' • DURÉE : '+duration+'\nSTYLE : '+style+'\nVOIX : '+voice+'\nRÉSEAUX : '+networks.join(', ')+'\nDIFFUSION : '+mode+'\n\nProchaine étape : connecter les services IA pour générer le script, les scènes et le fichier vidéo.';
+ const chips=document.getElementById('outputChips');chips.innerHTML='';
+ ['Brief enregistré localement',...networks].forEach(t=>{const s=document.createElement('span');s.className='chip';s.textContent=t;chips.appendChild(s)});
+ document.getElementById('output').style.display='block';
+ document.getElementById('preview').innerHTML='<div><div class="play">✓</div><strong>Projet préparé</strong><p>Le brief est prêt pour la prochaine étape d’intégration.</p></div>';
+ document.getElementById('output').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+ const views={creator:['Créateur vidéo','Utilise le formulaire pour préparer un brief.'],queue:['File de création','La file de génération sera connectée au moteur vidéo dans la prochaine version.'],publish:['Publications','La programmation sera activée après connexion de tes comptes et vérification des autorisations.'],settings:['Connexions','Les clés API seront configurées côté serveur, jamais dans cette interface.']};
+ const [title,desc]=views[btn.dataset.view];
+ document.querySelector('h1').textContent=title;document.querySelector('.subtitle').textContent=desc;
+}));
+</script>
+</body>
+</html>
